@@ -27,6 +27,7 @@ describe("VoterContract", () => {
     expect(candidates).to.deep.equal(candidateArray);
   });
 
+  
   it("Give Permission to Vote", async () => {
     await voterContract.connect(chairPerson).giveRightsToVote(voter1.address);
     await voterContract.connect(chairPerson).giveRightsToVote(voter2.address);
