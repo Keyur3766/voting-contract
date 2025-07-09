@@ -1,4 +1,40 @@
+import { useEffect, useRef } from "react";
+import { ethers } from "ethers";
+
+
 function App() {
+  const hasConnectedRef = useRef(false);
+
+  const connectWithBlockchain = async () => {
+    if (hasConnectedRef.current) return; // Prevent multiple calls
+    hasConnectedRef.current = true;
+    // what MetaMask injects as window.ethereum into each page
+    const provider = new ethers.providers.Web3Provider(window.ethereum);
+
+    // MetaMask requires requesting permission to connect users accounts
+    await provider.send("eth_requestAccounts", []);
+
+    // The MetaMask plugin also allows signing transactions to
+    // send ether and pay to change state within the blockchain.
+    // For this, you need the account signer...
+    const signer = provider.getSigner();
+    const myAddress = await signer.getAddress();
+    console.log("Your wallet address:", myAddress);
+
+    // Get your balance
+    const balance = await provider.getBalance(myAddress);
+    console.log("Your balance:", ethers.utils.formatEther(balance), "ETH");
+
+    // const tx = signer.sendTransaction({
+    //   to: "0xEAc65b925B274cdd8a501DD6A9F148A611dC990d",
+    //   value: ethers.utils.parseEther("0.0001"),
+    // });
+  }
+
+  useEffect(() => {
+    connectWithBlockchain()
+  }, []);
+
   return (
 
 
