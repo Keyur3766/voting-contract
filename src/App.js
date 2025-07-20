@@ -9,8 +9,8 @@ function App() {
     <Router>
       <Routes>
         <Route path="/" element={<HomeComponent />} />
-        <Route path="/chair-person" element={<ChairPerson />} />
-        <Route path="/voter" element={<Voter />} />
+        <Route path="/chair-person/:id" element={<ChairPerson />} />
+        <Route path="/voter/:id" element={<Voter />} />
       </Routes>
     </Router>
   );

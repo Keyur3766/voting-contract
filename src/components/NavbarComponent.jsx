@@ -1,40 +1,5 @@
-import { useEffect, useRef, useState } from "react";
-import { ethers } from "ethers";
 
-function NavbarComponent() {
-    const hasConnectedRef = useRef(false);
-    const [walletAddress, setAddress] = useState();
-
-    const connectWithBlockchain = async () => {
-      if (hasConnectedRef.current) return; // Prevent multiple calls
-      hasConnectedRef.current = true;
-      // what MetaMask injects as window.ethereum into each page
-      const provider = new ethers.providers.Web3Provider(window.ethereum);
-
-      // MetaMask requires requesting permission to connect users accounts
-      await provider.send("eth_requestAccounts", []);
-
-      // The MetaMask plugin also allows signing transactions to
-      // send ether and pay to change state within the blockchain.
-      // For this, you need the account signer...
-      const signer = provider.getSigner();
-      const myAddress = await signer.getAddress();
-      setAddress(myAddress);
-      console.log("Your wallet address:", myAddress);
-
-      // Get your balance
-      const balance = await provider.getBalance(myAddress);
-      console.log("Your balance:", ethers.utils.formatEther(balance), "ETH");
-
-      // const tx = signer.sendTransaction({
-      //   to: "0xEAc65b925B274cdd8a501DD6A9F148A611dC990d",
-      //   value: ethers.utils.parseEther("0.0001"),
-      // });
-    };
-
-    useEffect(() => {
-      connectWithBlockchain();
-    }, []);
+function NavbarComponent({ name, walletAddress }) {
 
     return (
       <>
@@ -45,14 +10,14 @@ function NavbarComponent() {
       <span className="self-center text-2xl font-semibold whitespace-nowrap dark:text-white">Flowbite</span>
   </a> */}
             <div className="flex md:order-2 space-x-3 md:space-x-0 rtl:space-x-reverse">
-              {walletAddress ? (
-                <div className="text-white text-xl">{walletAddress}</div>
+              {name && walletAddress ? (
+                            <div className="text-white text-xl">{name}: { walletAddress}</div>
               ) : (
                 <button
                   type="button"
                   className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-4 py-2 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
                 >
-                  Log in to Wallet
+                  No wallet connected
                 </button>
               )}
 
