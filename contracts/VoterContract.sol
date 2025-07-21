@@ -21,16 +21,19 @@ contract VoterContract {
     address public chairperson;
     mapping(address => Voter) voters;
 
-    constructor(string[] memory candidateNames) {
+    constructor() {
+        chairperson = msg.sender;
+        stage = VotingStages.CREATED;
+    } 
+
+    function addCandidates(string[] memory candidateNames) public {
         for(uint i=0;i<candidateNames.length;i++) {
             candidates.push(Candidate({
                 name: candidateNames[i],
                 voteCount: 0
             }));
         }
-        chairperson = msg.sender;
-        stage = VotingStages.CREATED;
-    } 
+    }
 
     modifier OnlyContractOwner() {
         require(msg.sender==chairperson, "Only chair person can perform operations");

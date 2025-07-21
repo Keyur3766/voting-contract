@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { ethers } from "ethers";
 import { useNavigate } from "react-router-dom";
+import VoterContract from "../abis/VoterContract.json";
 import NavbarComponent from "./NavbarComponent";
 
 function HomeComponent() {
@@ -35,6 +36,16 @@ function HomeComponent() {
     // Get your balance
     const balance = await provider.getBalance(myAddress);
     console.log("Your balance:", ethers.utils.formatEther(balance), "ETH");
+
+
+    const voterContract = new ethers.Contract(
+      config[network.chainId].voterContract.address,
+      VoterContract,
+      provider
+    );
+
+
+    
 
       return myAddress;
     // const tx = signer.sendTransaction({
