@@ -39,12 +39,12 @@ function HomeComponent() {
 
 
     const voterContract = new ethers.Contract(
-      config[network.chainId].voterContract.address,
+      "0xBD43D0A8a574C520fc5B1c1aeA881041e23096a8",
       VoterContract,
       provider
     );
 
-
+    console.warn(voterContract);
     
 
       return myAddress;
