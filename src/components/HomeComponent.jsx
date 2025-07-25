@@ -1,62 +1,16 @@
 import { useEffect, useRef, useState } from "react";
-import { ethers } from "ethers";
 import { useNavigate } from "react-router-dom";
-import VoterContract from "../abis/VoterContract.json";
+import { useWeb3Context } from "../context/Web3Context";
 import NavbarComponent from "./NavbarComponent";
 
 function HomeComponent() {
   const navigate = useNavigate();
-
+  const { connectWallet, account } = useWeb3Context();
     const navigateToRoute = async(route) => {
-        const walletAddress = await connectWithBlockchain();
-        navigate(`${route}/${walletAddress}`);
-
+        const account = await connectWallet();
+        navigate(`${route}/${account}`);
   };
 
-  const hasConnectedRef = useRef(false);
-  const [walletAddress, setAddress] = useState();
-
-  const connectWithBlockchain = async () => {
-    if (hasConnectedRef.current) return; // Prevent multiple calls
-    hasConnectedRef.current = true;
-    // what MetaMask injects as window.ethereum into each page
-    const provider = new ethers.providers.Web3Provider(window.ethereum);
-
-    // MetaMask requires requesting permission to connect users accounts
-    await provider.send("eth_requestAccounts", []);
-
-    // The MetaMask plugin also allows signing transactions to
-    // send ether and pay to change state within the blockchain.
-    // For this, you need the account signer...
-    const signer = provider.getSigner();
-    const myAddress = await signer.getAddress();
-    setAddress(myAddress);
-    console.log("Your wallet address:", myAddress);
-
-    // Get your balance
-    const balance = await provider.getBalance(myAddress);
-    console.log("Your balance:", ethers.utils.formatEther(balance), "ETH");
-
-
-    const voterContract = new ethers.Contract(
-      "0xBD43D0A8a574C520fc5B1c1aeA881041e23096a8",
-      VoterContract,
-      provider
-    );
-
-    console.warn(voterContract);
-    
-
-      return myAddress;
-    // const tx = signer.sendTransaction({
-    //   to: "0xEAc65b925B274cdd8a501DD6A9F148A611dC990d",
-    //   value: ethers.utils.parseEther("0.0001"),
-    // });
-  };
-
-//   useEffect(() => {
-//     connectWithBlockchain();
-//   }, []);
 
   return (
     <>
