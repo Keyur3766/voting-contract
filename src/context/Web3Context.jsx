@@ -22,7 +22,7 @@ const Web3Provider = ({ children }) => {
   const hasConnectedRef = useRef(false);
 
   const connectWallet = async () => {
-    if (hasConnectedRef.current) return; // Prevent multiple calls
+    // if (hasConnectedRef.current) return; // Prevent multiple calls
     hasConnectedRef.current = true;
     // what MetaMask injects as window.ethereum into each page
     const provider = new ethers.providers.Web3Provider(window.ethereum);
@@ -46,6 +46,8 @@ const Web3Provider = ({ children }) => {
       VoterContract,
       provider
     );
+
+    
 
     setSigner(signer);
     setContract(voterContract);

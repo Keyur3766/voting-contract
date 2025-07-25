@@ -9,9 +9,8 @@ function HomeComponent() {
     const navigateToRoute = async(route) => {
         const account = await connectWallet();
         navigate(`${route}/${account}`);
-  };
-
-
+    };
+  
   return (
     <>
       <NavbarComponent />
