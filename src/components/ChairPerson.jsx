@@ -5,19 +5,21 @@ import { useWeb3Context } from "../context/Web3Context";
 function ChairPersonComponent() {
   const { id } = useParams();
   const [candidates, setCandidate] = useState([]);
-  const { contract, connectWallet } = useWeb3Context();
+  const [availableCandidate, setAvailableCandidate] = useState([]);
+  const { contract, signer, connectWallet } = useWeb3Context();
   const handleChange = (event) => {
     const values = event.target.value.split(",");
     
-    let candidateArray;
+    let candidateArray = [];
+    if (values) {
+      values.map((candidate) => {
+        if (candidate != "") {
+          candidateArray.push(candidate);
+        }
+      });
 
-    values.map((candidate) => {
-      if (candidate != '') {
-        candidateArray.push(candidate);
-      }
-    })
-
-    setCandidate(candidateArray);
+      setCandidate(candidateArray); 
+    }
   };
 
   async function getConnection() {
@@ -34,10 +36,13 @@ function ChairPersonComponent() {
   }, []);
 
   const handleAddCandidates = async () => {
-    console.warn(contract);
-    const availableCandidates = await contract.getCandidates();
+    await contract.addCandidates(candidates);
+  }
 
-    console.log(availableCandidates);
+
+  const handleGetCandidates = async () => {
+    const availableCandidates = await contract.getCandidates();
+    setAvailableCandidate(availableCandidates);
   }
 
     return (
@@ -65,10 +70,29 @@ function ChairPersonComponent() {
               />
             </div>
           </form>
-          <button onClick={handleAddCandidates}  class="mt-5 bg-transparent hover:bg-blue-500 text-blue-700 font-semibold hover:text-white py-1 px-4 border border-blue-500 hover:border-transparent rounded">
-            Button
-          </button>
-          
+          <div>
+            <button
+              onClick={handleAddCandidates}
+              class="mt-5 bg-transparent hover:bg-blue-500 text-blue-700 font-semibold hover:text-white py-1 px-4 border border-blue-500 hover:border-transparent rounded"
+            >
+              Add Candidates
+            </button>
+
+            <button
+              onClick={handleGetCandidates}
+              class="ml-5 mt-5 bg-transparent hover:bg-blue-500 text-blue-700 font-semibold hover:text-white py-1 px-4 border border-blue-500 hover:border-transparent rounded"
+            >
+              Get Candidates
+            </button>
+          </div>
+
+          {availableCandidate.length > 0 ? (
+            availableCandidate.map((candidate) => (
+              <div>{candidate}</div>
+            ))
+          ) : (
+            <p>No candidates available</p>
+          )}
         </div>
       </>
     );

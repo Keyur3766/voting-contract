@@ -44,7 +44,7 @@ const Web3Provider = ({ children }) => {
     const voterContract = new ethers.Contract(
       "0xBD43D0A8a574C520fc5B1c1aeA881041e23096a8",
       VoterContract,
-      provider
+      signer
     );
 
     
